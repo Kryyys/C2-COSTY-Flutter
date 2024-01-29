@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:td/models/habitation.dart';
+import 'package:td/share/location_style.dart';
+import 'package:td/share/location_text_style.dart';
+import 'package:intl/intl.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -44,7 +48,9 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
+            SizedBox(height: 30),
             _buildTypeHabitat(),
+            SizedBox(height: 20),
             _buildDerniereLocation(context),
           ],
         )
@@ -54,8 +60,10 @@ class MyHomePage extends StatelessWidget {
 
   _buildTypeHabitat() {
     return Container(
+      padding: EdgeInsets.all(6.0),
       height: 100,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(
           _typehabitats.length,
               (index) => _buildHabitat(_typehabitats[index]),
@@ -74,10 +82,29 @@ class MyHomePage extends StatelessWidget {
       default :
         icon = Icons.home;
     }
-    return Container(
-      height: 80,
-      child: Row(
-        children: [Icon(icon), Text(typeHabitat.libelle)],
+    return Expanded(
+      child: Container(
+        height: 80,
+        decoration: BoxDecoration(
+          color: LocationStyle.backgroundColorPurple,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        margin: EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: Colors.white70,
+            ),
+            SizedBox(width: 5),
+            Text(
+              typeHabitat.libelle,
+              style: LocationTextStyle.regularWhiteTextStyle,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -96,22 +123,38 @@ class MyHomePage extends StatelessWidget {
   }
 
   _buildRow(Habitation habitation, BuildContext context) {
+    var format = NumberFormat("### €");
+
     return Container(
       width: 240,
+      margin: EdgeInsets.all(4.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            'assets/images/locations/${habitation.image}',
-            fit: BoxFit.fitWidth,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            child: Image.asset(
+              'assets/images/locations/${habitation.image}',
+              fit: BoxFit.fitWidth,
+            ),
           ),
-          Text(habitation.libelle),
+          Text(
+            habitation.libelle,
+            style: LocationTextStyle.regularTestStyle,
+          ),
           Row(
             children: [
               Icon(Icons.location_on_outlined),
-              Text(habitation.adresse),
+              Text(
+                habitation.adresse,
+                style: LocationTextStyle.regularTestStyle,
+              ),
             ],
           ),
-          Text(habitation.prixmois.toString()),
+          Text(
+            format.format(habitation.prixmois),
+            style: LocationTextStyle.boldTextStyle,
+          ),
         ],
       ),
     );
